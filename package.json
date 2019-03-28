@@ -1,0 +1,29 @@
+{
+  "name": "cryptolens",
+  "version": "1.0.0",
+  "description": "Client API for NodeJS to access Cryptolens Software Licensing API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cryptolens/cryptolens-nodejs.git"
+  },
+  "keywords": [
+    "licensing as a service",
+    "licensing library",
+    "licensing",
+    "cryptolens",
+    "software licensing"
+  ],
+  "author": "Cryptolens AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Cryptolens/cryptolens-nodejs/issues"
+  },
+  "homepage": "https://github.com/Cryptolens/cryptolens-nodejs#readme",
+  "dependencies": {
+    "request": "^2.88.0"
+  }
+}
