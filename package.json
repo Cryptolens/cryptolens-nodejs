@@ -2,7 +2,7 @@
   "name": "cryptolens",
   "version": "1.0.0",
   "description": "Client API for NodeJS to access Cryptolens Software Licensing API",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,7 +1,8 @@
 const request = require('request');
+const helpers = require('../internal/HelperMethods.js');
 
 module.exports = class Key {
-    static Activate(token, ProductId, Key, MachineCode = "", FieldsToReturn = 0, Metadata=false, FloatingTimeInterval = 0, MaxOverdraft = 0) {
+    static Activate(token, RSAPubKey, ProductId, Key, MachineCode = "", FieldsToReturn = 0, Metadata=false, FloatingTimeInterval = 0, MaxOverdraft = 0) {
 
         return new Promise((resolve, reject) => {
             request(`https://app.cryptolens.io/api/key/Activate?token=${token}&productId=${ProductId}&Key=${Key}&machineCode=${MachineCode}&fieldsToReturn=${FieldsToReturn}&Metadata=${Metadata}&FloatingTimeInterval=${FloatingTimeInterval}&MaxOverdraft=${MaxOverdraft}&Sign=true&SignMethod=1`, { json: true }, (err, res, body) => {
@@ -11,8 +12,16 @@ module.exports = class Key {
                         console.warn(body.message);
                     }
                     resolve(null);
+                } else {
+                    if(helpers.VerifySignature(body, RSAPubKey)) {
+                        var license = JSON.parse(Buffer.from(body["licenseKey"], "base64").toString("utf-8"));
+                        license.RawResponse = body;
+                        resolve(license);
+                    } else{
+                        console.warn("Signature verification failed.");
+                        resolve(null);
+                    }
                 }
-                resolve(body);
             });
         });
       
