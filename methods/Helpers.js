@@ -1,4 +1,5 @@
 const helpers = require('../internal/HelperMethods.js');
+const { execSync } = require("child_process");
 
 module.exports = class Helpers {
 
@@ -41,5 +42,22 @@ module.exports = class Helpers {
         }
         return null;
     }
+
+
+    /**
+     * Returns a machine code of the current device.
+     */
+     static GetMachineCode_beta() {
+
+        if (process.platform === "win32") {
+            return execSync("cmd.exe /C wmic csproduct get uuid", {encoding: 'utf8'});
+        } else if (process.platform === "linux") {
+            return execSync("dmidecode -s system-uuid", {encoding: 'utf8'});
+        } else if (process.platform === "darwin") {
+            return execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", {encoding: 'utf8'});
+        }
+        
+        return null;
+    }    
 
 }
