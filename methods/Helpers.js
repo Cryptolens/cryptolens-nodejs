@@ -50,7 +50,7 @@ module.exports = class Helpers {
      static GetMachineCode_beta() {
 
         if (process.platform === "win32") {
-					return execSync('cmd.exe /C wmic csproduct get uuid', {encoding: 'utf8'});
+					return execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', {encoding: 'utf8'});
         } else if (process.platform === "linux") {
             return execSync("dmidecode -s system-uuid", {encoding: 'utf8'});
         } else if (process.platform === "darwin") {
