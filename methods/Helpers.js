@@ -1,6 +1,7 @@
 const helpers = require('../internal/HelperMethods.js');
 const { execSync } = require("child_process");
-const md5 = require('md5')
+var crypto = require('crypto');
+
 
 module.exports = class Helpers {
 
@@ -50,14 +51,18 @@ module.exports = class Helpers {
      */
      static GetMachineCode_beta() {
 
+        var res = "";
+
         if (process.platform === "win32") {
-					return md5(execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', {encoding: 'utf8'}));
+			res= (execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', {encoding: 'utf8'}));
         } else if (process.platform === "linux") {
-            return md5(execSync("dmidecode -s system-uuid", {encoding: 'utf8'}));
+            res = (execSync("findmnt", "--output=UUID --noheadings --target=/boot", {encoding: 'utf8'}));
         } else if (process.platform === "darwin") {
-            return md5(execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", {encoding: 'utf8'}));
+            res = (execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", {encoding: 'utf8'}));
         }
         
+        return crypto.createHash('sha256').update(res).digest('hex');
+
         return null;
     }
 
