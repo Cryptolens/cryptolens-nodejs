@@ -1,5 +1,6 @@
 const helpers = require('../internal/HelperMethods.js');
 const { execSync } = require("child_process");
+const md5 = require('md5')
 
 module.exports = class Helpers {
 
@@ -50,11 +51,11 @@ module.exports = class Helpers {
      static GetMachineCode_beta() {
 
         if (process.platform === "win32") {
-					return execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', {encoding: 'utf8'});
+					return md5(execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', {encoding: 'utf8'}));
         } else if (process.platform === "linux") {
-            return execSync("dmidecode -s system-uuid", {encoding: 'utf8'});
+            return md5(execSync("dmidecode -s system-uuid", {encoding: 'utf8'}));
         } else if (process.platform === "darwin") {
-            return execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", {encoding: 'utf8'});
+            return md5(execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", {encoding: 'utf8'}));
         }
         
         return null;
