@@ -90,4 +90,35 @@ module.exports = class Helpers {
 			return !Helpers.HasExpired(licenseKey);
 	}
 
+  /**
+   * Check if the license has a certain feature enabled (i.e. set to true).
+   * @param licenseKey a license key object.
+   * @param feature The feature, eg 1 to 8.
+   * @return If the feature is set to true, true is returned and false otherwise.
+   */
+   static HasFeature(licenseKey, feature) {
+
+	  if(licenseKey == null){
+		  	return false;
+	  }
+
+	if (feature == 1 && licenseKey.F1)
+			return true;
+	if (feature == 2 && licenseKey.F2)
+			return true;
+	if (feature == 3 && licenseKey.F3)
+			return true;
+	if (feature == 4 && licenseKey.F4)
+			return true;
+	if (feature == 5 && licenseKey.F5)
+			return true;
+	if (feature == 6 && licenseKey.F6)
+			return true;
+	if (feature == 7 && licenseKey.F7)
+			return true;
+	if (feature == 8 && licenseKey.F8)
+			return true;
+
+	  return false;
+  }
 }
