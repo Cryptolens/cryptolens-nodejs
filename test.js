@@ -10,4 +10,4 @@ const Helpers = require('./methods/Helpers.js');
 //result2.then((s)=> console.log(Helpers.LoadFromString(RSAPubKey, Helpers.SaveAsString(s))));
 
 
-Helpers.GetMachineCode();
+console.log(Helpers.GetMachineCode_beta());
