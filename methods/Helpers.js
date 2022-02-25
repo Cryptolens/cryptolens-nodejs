@@ -10,7 +10,7 @@ module.exports = class Helpers {
      * @param {object} licenseKey The license key object to serialize.
      */
     static SaveAsString(licenseKey) {
-        if(licenseKey.RawResponse) {
+        if (licenseKey.RawResponse) {
             return JSON.stringify(licenseKey.RawResponse);
         }
         console.warn("The license key does not have a raw response field.");
@@ -31,11 +31,11 @@ module.exports = class Helpers {
     static LoadFromString(rsaPubKey, string, signatureExpirationInterval = 0) {
         var response = JSON.parse(string);
 
-        if (helpers.VerifySignature(response, rsaPubKey)){
-            var licenseKey = JSON.parse(Buffer.from(response.licenseKey,'base64').toString("utf-8"));
-            var signed = new Date(licenseKey.SignDate*1000);
-            var exp = new Date(signed.getFullYear(),signed.getMonth(),signed.getDate()+signatureExpirationInterval);
-            if(signatureExpirationInterval > 0 && new Date() > exp) {
+        if (helpers.VerifySignature(response, rsaPubKey)) {
+            var licenseKey = JSON.parse(Buffer.from(response.licenseKey, 'base64').toString("utf-8"));
+            var signed = new Date(licenseKey.SignDate * 1000);
+            var exp = new Date(signed.getFullYear(), signed.getMonth(), signed.getDate() + signatureExpirationInterval);
+            if (signatureExpirationInterval > 0 && new Date() > exp) {
                 console.warn("The license has expired.");
                 return null;
             }
@@ -49,17 +49,17 @@ module.exports = class Helpers {
     /**
      * Returns a machine code of the current device.
      */
-     static GetMachineCode_beta() {
+    static GetMachineCode() {
 
         var res = "";
 
         if (process.platform === "win32") {
-			res = (execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', {encoding: 'utf8'}));
+            res = (execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', { encoding: 'utf8' }));
             res = res.substring(res.indexOf("UUID")).trim();
         } else if (process.platform === "linux") {
-            res = (execSync("findmnt", "--output=UUID --noheadings --target=/boot", {encoding: 'utf8'}));
+            res = (execSync("findmnt", "--output=UUID --noheadings --target=/boot", { encoding: 'utf8' }));
         } else if (process.platform === "darwin") {
-            res = (execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", {encoding: 'utf8'}));
+            res = (execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", { encoding: 'utf8' }));
         }
 
         return crypto.createHash('sha256').update(res).digest('hex');
@@ -70,59 +70,58 @@ module.exports = class Helpers {
      * @param licenseKey a license key object.
      * @return True if it has expired and false otherwise.
      */
-	 static HasExpired(licenseKey) {
+    static HasExpired(licenseKey) {
+        if (licenseKey == null) {
+            return false;
+        }
 
-		if(licenseKey == null) {
-				return false;
-		}
-		
-		let unixTime = new Date() / 1000;
+        let unixTime = new Date() / 1000;
 
-		if (licenseKey.Expires < unixTime) {
-				return true;
-		}
+        if (licenseKey.Expires < unixTime) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Check if the current license has not expired.
-	 * @param licenseKey a license key object.
-	 * @return True if it has not expired and false otherwise.
-	 */
-	static HasNotExpired(licenseKey) {
-			return !Helpers.HasExpired(licenseKey);
-	}
+    /**
+     * Check if the current license has not expired.
+     * @param licenseKey a license key object.
+     * @return True if it has not expired and false otherwise.
+     */
+    static HasNotExpired(licenseKey) {
+        return !Helpers.HasExpired(licenseKey);
+    }
 
-  /**
-   * Check if the license has a certain feature enabled (i.e. set to true).
-   * @param licenseKey a license key object.
-   * @param feature The feature, eg 1 to 8.
-   * @return If the feature is set to true, true is returned and false otherwise.
-   */
-   static HasFeature(licenseKey, feature) {
+    /**
+     * Check if the license has a certain feature enabled (i.e. set to true).
+     * @param licenseKey a license key object.
+     * @param feature The feature, eg 1 to 8.
+     * @return If the feature is set to true, true is returned and false otherwise.
+     */
+    static HasFeature(licenseKey, feature) {
 
-	  if(licenseKey == null){
-		  	return false;
-	  }
+        if (licenseKey == null) {
+            return false;
+        }
 
-	if (feature == 1 && licenseKey.F1)
-			return true;
-	if (feature == 2 && licenseKey.F2)
-			return true;
-	if (feature == 3 && licenseKey.F3)
-			return true;
-	if (feature == 4 && licenseKey.F4)
-			return true;
-	if (feature == 5 && licenseKey.F5)
-			return true;
-	if (feature == 6 && licenseKey.F6)
-			return true;
-	if (feature == 7 && licenseKey.F7)
-			return true;
-	if (feature == 8 && licenseKey.F8)
-			return true;
+        if (feature == 1 && licenseKey.F1)
+            return true;
+        if (feature == 2 && licenseKey.F2)
+            return true;
+        if (feature == 3 && licenseKey.F3)
+            return true;
+        if (feature == 4 && licenseKey.F4)
+            return true;
+        if (feature == 5 && licenseKey.F5)
+            return true;
+        if (feature == 6 && licenseKey.F6)
+            return true;
+        if (feature == 7 && licenseKey.F7)
+            return true;
+        if (feature == 8 && licenseKey.F8)
+            return true;
 
-	  return false;
-  }
+        return false;
+    }
 }
