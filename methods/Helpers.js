@@ -31,7 +31,7 @@ module.exports = class Helpers {
     static LoadFromString(rsaPubKey, string, signatureExpirationInterval = 0) {
         var response = JSON.parse(string);
 
-        if(helpers.VerifySignature(response, rsaPubKey)){
+        if (helpers.VerifySignature(response, rsaPubKey)){
             var licenseKey = JSON.parse(Buffer.from(response.licenseKey,'base64').toString("utf-8"));
             var signed = new Date(licenseKey.SignDate*1000);
             var exp = new Date(signed.getFullYear(),signed.getMonth(),signed.getDate()+signatureExpirationInterval);
@@ -54,36 +54,35 @@ module.exports = class Helpers {
         var res = "";
 
         if (process.platform === "win32") {
-			res= (execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', {encoding: 'utf8'}));
+			res = (execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', {encoding: 'utf8'}));
+            res = res.substring(res.indexOf("UUID")).trim();
         } else if (process.platform === "linux") {
             res = (execSync("findmnt", "--output=UUID --noheadings --target=/boot", {encoding: 'utf8'}));
         } else if (process.platform === "darwin") {
             res = (execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", {encoding: 'utf8'}));
         }
-        
-        return crypto.createHash('sha256').update(res).digest('hex');
 
-        return null;
+        return crypto.createHash('sha256').update(res).digest('hex');
     }
 
-		/**
+    /**
      * Check if the current license has expired.
      * @param licenseKey a license key object.
      * @return True if it has expired and false otherwise.
      */
-		 static HasExpired(licenseKey) {
+	 static HasExpired(licenseKey) {
 
-			if(licenseKey == null) {
-					return false;
-			}
-			
-			let unixTime = new Date() / 1000;
+		if(licenseKey == null) {
+				return false;
+		}
+		
+		let unixTime = new Date() / 1000;
 
-			if (licenseKey.Expires < unixTime) {
-					return true;
-			}
+		if (licenseKey.Expires < unixTime) {
+				return true;
+		}
 
-			return false;
+		return false;
 	}
 
 	/**
