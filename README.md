@@ -17,7 +17,7 @@ To verify a license key, you can use the code below. The RSAPublicKey, token and
 const Key = require('cryptolens').Key;
 
 var RSAPubKey = "{Your RSA Public key, which can be found here: https://app.cryptolens.io/User/Security}";
-var result = Key.Activate(token="{Access token with with Activate permission}", RSAPubKey, ProductId=3349, Key="GEBNC-WZZJD-VJIHG-GCMVD", MachineCode="test");
+var result = Key.Activate(token="{Access token with with Activate permission}", RSAPubKey, ProductId=3349, Key="GEBNC-WZZJD-VJIHG-GCMVD", MachineCode=Helpers.GetMachineCode());
 
 result.then(function(license) {
     if (!license) {
