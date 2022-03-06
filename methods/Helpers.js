@@ -124,4 +124,40 @@ module.exports = class Helpers {
 
         return false;
     }
+
+	/**
+   * Check if the device is registered with the license key. This method is useful for platforms where the
+   * GetMachineCode() is not supported, eg. on Android.
+   * @param license The license key object.
+   * @param machineCode The machine code of the current device.
+   * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
+   *                          You can enable floating licenses by setting @see ActivateModel.FloatingTimeInterval.
+   * @param allowOverdraft If floating licensing is enabled with overdraft, this parameter should be set to true.
+   *                       You can enable overdraft by setting ActivateModel.MaxOverdraft" to a value greater than 0.
+   *
+   * @return True if the license is registered with this machine and False otherwise.
+   */
+		 static IsOnRightMachine(license, machineCode, isFloatingLicense, allowOverdraft) {
+
+			if(machineCode == null) machineCode = Helpers.GetMachineCode_beta()
+	
+			if (license == null || license.ActivatedMachines == null){
+					return false;
+			}
+	
+			if(isFloatingLicense) {
+				license.ActivatedMachines.forEach(machine => {
+							if(machine.Mid.length >= 9 && machine.Mid == machineCode || allowOverdraft && machine.Mid.length >= 19 && machine.Mid == machineCode) {
+									return true;
+							}
+					})
+			} else {
+	
+				license.ActivatedMachines.forEach(machine => {
+					if(machine.Mid == machineCode)
+										return true;
+				});
+			}
+			return false;
+		}
 }
