@@ -29,6 +29,7 @@ module.exports = class Helpers {
      * days have passed since the last activation.
      */
     static LoadFromString(rsaPubKey, string, signatureExpirationInterval = 0) {
+			try {
         var response = JSON.parse(string);
 
         if (helpers.VerifySignature(response, rsaPubKey)) {
@@ -43,6 +44,9 @@ module.exports = class Helpers {
             return licenseKey;
         }
         return null;
+			} catch (error) {
+				return null;
+			}
     }
 
 
