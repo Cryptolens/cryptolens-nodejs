@@ -130,19 +130,32 @@ module.exports = class Helpers {
     }
 
     /**
-   * Check if the device is registered with the license key.
-   * @param license The license key object.
-   * @param machineCode The machine code of the current device.
-   * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
-   *                          You can enable floating licenses by setting @see ActivateModel.FloatingTimeInterval.
-   * @param allowOverdraft If floating licensing is enabled with overdraft, this parameter should be set to true.
-   *                       You can enable overdraft by setting ActivateModel.MaxOverdraft" to a value greater than 0.
-   *
-   * @return True if the license is registered with this machine and False otherwise.
-   */
+      * Check if the device is registered with the license key.
+      * @param license The license key object.
+      * @param machineCode The machine code of the current device.
+      * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
+      *                          You can enable floating licenses by setting @see ActivateModel.FloatingTimeInterval.
+      * @param allowOverdraft If floating licensing is enabled with overdraft, this parameter should be set to true.
+      *                       You can enable overdraft by setting ActivateModel.MaxOverdraft" to a value greater than 0.
+      *
+      * @return True if the license is registered with this machine and False otherwise.
+      */
     static IsOnRightMachine(license, machineCode, isFloatingLicense, allowOverdraft) {
+        return this.IsOnRightMachine(license, Helpers.GetMachineCode(), isFloatingLicense, allowOverdraft);
+    }
 
-        if (machineCode == null) machineCode = Helpers.GetMachineCode_beta()
+    /**
+      * Check if the device is registered with the license key.
+      * @param license The license key object.
+      * @param machineCode The machine code of the current device.
+      * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
+      *                          You can enable floating licenses by setting @see ActivateModel.FloatingTimeInterval.
+      * @param allowOverdraft If floating licensing is enabled with overdraft, this parameter should be set to true.
+      *                       You can enable overdraft by setting ActivateModel.MaxOverdraft" to a value greater than 0.
+      *
+      * @return True if the license is registered with this machine and False otherwise.
+      */
+    static IsOnRightMachine(license, machineCode, isFloatingLicense, allowOverdraft) {
 
         if (license == null || license.ActivatedMachines == null) {
             return false;
