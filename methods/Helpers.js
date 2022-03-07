@@ -130,8 +130,7 @@ module.exports = class Helpers {
     }
 
     /**
-   * Check if the device is registered with the license key. This method is useful for platforms where the
-   * GetMachineCode() is not supported, eg. on Android.
+   * Check if the device is registered with the license key.
    * @param license The license key object.
    * @param machineCode The machine code of the current device.
    * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
