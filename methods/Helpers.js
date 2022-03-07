@@ -140,7 +140,7 @@ module.exports = class Helpers {
       *
       * @return True if the license is registered with this machine and False otherwise.
       */
-    static IsOnRightMachine(license, machineCode, isFloatingLicense, allowOverdraft) {
+    static IsOnRightMachine(license, isFloatingLicense, allowOverdraft) {
         return this.IsOnRightMachine(license, Helpers.GetMachineCode(), isFloatingLicense, allowOverdraft);
     }
 
