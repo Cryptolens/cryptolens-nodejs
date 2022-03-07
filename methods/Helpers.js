@@ -29,24 +29,24 @@ module.exports = class Helpers {
      * days have passed since the last activation.
      */
     static LoadFromString(rsaPubKey, string, signatureExpirationInterval = 0) {
-			try {
-        var response = JSON.parse(string);
+        try {
+            var response = JSON.parse(string);
 
-        if (helpers.VerifySignature(response, rsaPubKey)) {
-            var licenseKey = JSON.parse(Buffer.from(response.licenseKey, 'base64').toString("utf-8"));
-            var signed = new Date(licenseKey.SignDate * 1000);
-            var exp = new Date(signed.getFullYear(), signed.getMonth(), signed.getDate() + signatureExpirationInterval);
-            if (signatureExpirationInterval > 0 && new Date() > exp) {
-                console.warn("The license has expired.");
-                return null;
+            if (helpers.VerifySignature(response, rsaPubKey)) {
+                var licenseKey = JSON.parse(Buffer.from(response.licenseKey, 'base64').toString("utf-8"));
+                var signed = new Date(licenseKey.SignDate * 1000);
+                var exp = new Date(signed.getFullYear(), signed.getMonth(), signed.getDate() + signatureExpirationInterval);
+                if (signatureExpirationInterval > 0 && new Date() > exp) {
+                    console.warn("The license has expired.");
+                    return null;
+                }
+                licenseKey.RawResponse = response;
+                return licenseKey;
             }
-            licenseKey.RawResponse = response;
-            return licenseKey;
+            return null;
+        } catch (error) {
+            return null;
         }
-        return null;
-			} catch (error) {
-				return null;
-			}
     }
 
 
@@ -129,7 +129,7 @@ module.exports = class Helpers {
         return false;
     }
 
-	/**
+    /**
    * Check if the device is registered with the license key. This method is useful for platforms where the
    * GetMachineCode() is not supported, eg. on Android.
    * @param license The license key object.
@@ -141,27 +141,27 @@ module.exports = class Helpers {
    *
    * @return True if the license is registered with this machine and False otherwise.
    */
-		 static IsOnRightMachine(license, machineCode, isFloatingLicense, allowOverdraft) {
+    static IsOnRightMachine(license, machineCode, isFloatingLicense, allowOverdraft) {
 
-			if(machineCode == null) machineCode = Helpers.GetMachineCode_beta()
-	
-			if (license == null || license.ActivatedMachines == null){
-					return false;
-			}
-	
-			if(isFloatingLicense) {
-				license.ActivatedMachines.forEach(machine => {
-							if(machine.Mid.length >= 9 && machine.Mid == machineCode || allowOverdraft && machine.Mid.length >= 19 && machine.Mid == machineCode) {
-									return true;
-							}
-					})
-			} else {
-	
-				license.ActivatedMachines.forEach(machine => {
-					if(machine.Mid == machineCode)
-										return true;
-				});
-			}
-			return false;
-		}
+        if (machineCode == null) machineCode = Helpers.GetMachineCode_beta()
+
+        if (license == null || license.ActivatedMachines == null) {
+            return false;
+        }
+
+        if (isFloatingLicense) {
+            license.ActivatedMachines.forEach(machine => {
+                if (machine.Mid.length >= 9 && machine.Mid == machineCode || allowOverdraft && machine.Mid.length >= 19 && machine.Mid == machineCode) {
+                    return true;
+                }
+            })
+        } else {
+
+            license.ActivatedMachines.forEach(machine => {
+                if (machine.Mid == machineCode)
+                    return true;
+            });
+        }
+        return false;
+    }
 }
