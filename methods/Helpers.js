@@ -132,7 +132,6 @@ module.exports = class Helpers {
     /**
       * Check if the device is registered with the license key.
       * @param license The license key object.
-      * @param machineCode The machine code of the current device.
       * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
       *                          You can enable floating licenses by setting @see ActivateModel.FloatingTimeInterval.
       * @param allowOverdraft If floating licensing is enabled with overdraft, this parameter should be set to true.
@@ -140,8 +139,9 @@ module.exports = class Helpers {
       *
       * @return True if the license is registered with this machine and False otherwise.
       */
-    static IsOnRightMachine(license, isFloatingLicense, allowOverdraft) {
-        return this.IsOnRightMachine(license, Helpers.GetMachineCode(), isFloatingLicense, allowOverdraft);
+    static IsOnRightMachine(license, isFloatingLicense = false, allowOverdraft = false) {
+        console.log("here");
+        return this.IsOnRightMachine(license, this.GetMachineCode(), isFloatingLicense, allowOverdraft);
     }
 
     /**
@@ -155,25 +155,31 @@ module.exports = class Helpers {
       *
       * @return True if the license is registered with this machine and False otherwise.
       */
-    static IsOnRightMachine(license, machineCode, isFloatingLicense, allowOverdraft) {
+    static IsOnRightMachine(license, machineCode, isFloatingLicense = false, allowOverdraft = false) {
+
+        machineCode = this.GetMachineCode();
 
         if (license == null || license.ActivatedMachines == null) {
             return false;
         }
 
+        var res = false;
+
         if (isFloatingLicense) {
             license.ActivatedMachines.forEach(machine => {
                 if (machine.Mid.length >= 9 && machine.Mid == machineCode || allowOverdraft && machine.Mid.length >= 19 && machine.Mid == machineCode) {
-                    return true;
+                    res = true;
                 }
             })
         } else {
-
+            
             license.ActivatedMachines.forEach(machine => {
                 if (machine.Mid == machineCode)
-                    return true;
+                {
+                    res = true;
+                }
             });
         }
-        return false;
+        return res;
     }
 }
