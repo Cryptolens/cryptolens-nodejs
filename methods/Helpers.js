@@ -29,20 +29,24 @@ module.exports = class Helpers {
      * days have passed since the last activation.
      */
     static LoadFromString(rsaPubKey, string, signatureExpirationInterval = 0) {
-        var response = JSON.parse(string);
+        try {
+            var response = JSON.parse(string);
 
-        if (helpers.VerifySignature(response, rsaPubKey)) {
-            var licenseKey = JSON.parse(Buffer.from(response.licenseKey, 'base64').toString("utf-8"));
-            var signed = new Date(licenseKey.SignDate * 1000);
-            var exp = new Date(signed.getFullYear(), signed.getMonth(), signed.getDate() + signatureExpirationInterval);
-            if (signatureExpirationInterval > 0 && new Date() > exp) {
-                console.warn("The license has expired.");
-                return null;
+            if (helpers.VerifySignature(response, rsaPubKey)) {
+                var licenseKey = JSON.parse(Buffer.from(response.licenseKey, 'base64').toString("utf-8"));
+                var signed = new Date(licenseKey.SignDate * 1000);
+                var exp = new Date(signed.getFullYear(), signed.getMonth(), signed.getDate() + signatureExpirationInterval);
+                if (signatureExpirationInterval > 0 && new Date() > exp) {
+                    console.warn("The license has expired.");
+                    return null;
+                }
+                licenseKey.RawResponse = response;
+                return licenseKey;
             }
-            licenseKey.RawResponse = response;
-            return licenseKey;
+            return null;
+        } catch (error) {
+            return null;
         }
-        return null;
     }
 
 
@@ -123,5 +127,65 @@ module.exports = class Helpers {
             return true;
 
         return false;
+    }
+
+
+
+    /**
+      * Check if the device is registered with the license key.
+      * @param license The license key object.
+      * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
+      *                          You can enable floating licenses by setting @see ActivateModel.FloatingTimeInterval.
+      * @param allowOverdraft If floating licensing is enabled with overdraft, this parameter should be set to true.
+      *                       You can enable overdraft by setting ActivateModel.MaxOverdraft" to a value greater than 0.
+      *
+      * @return True if the license is registered with this machine and False otherwise.
+      */
+    static IsOnRightMachine(license, isFloatingLicense, allowOverdraft) {
+        return this.IsOnRightMachineCustom(license, this.GetMachineCode(), isFloatingLicense, allowOverdraft);
+    }
+
+    /**
+      * Check if the device is registered with the license key. This method allows you to pass in a custom machine code.
+      * @param license The license key object.
+      * @param machineCode The machine code of the current device.
+      * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
+      *                          You can enable floating licenses by setting @see ActivateModel.FloatingTimeInterval.
+      * @param allowOverdraft If floating licensing is enabled with overdraft, this parameter should be set to true.
+      *                       You can enable overdraft by setting ActivateModel.MaxOverdraft" to a value greater than 0.
+      *
+      * @return True if the license is registered with this machine and False otherwise.
+      */
+    static IsOnRightMachineCustom(license, machineCode, isFloatingLicense, allowOverdraft) {
+
+        if (license == null || license.ActivatedMachines == null) {
+            return false;
+        }
+
+        if (machineCode == null) {
+            machineCode = this.GetMachineCode();
+        }
+
+        var res = false;
+
+        console.log(isFloatingLicense);
+
+        if (isFloatingLicense) {
+            console.log("floating");
+            license.ActivatedMachines.forEach(machine => {
+                if (machine.Mid.length >= 9 && machine.Mid.substring(9) == machineCode ||
+                    allowOverdraft && machine.Mid.length >= 19 && machine.Mid.substring(19) == machineCode) {
+                    res = true;
+                }
+            })
+        } else {
+
+            license.ActivatedMachines.forEach(machine => {
+                if (machine.Mid == machineCode) {
+                    res = true;
+                }
+            });
+        }
+        return res;
     }
 }
