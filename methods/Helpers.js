@@ -129,6 +129,8 @@ module.exports = class Helpers {
         return false;
     }
 
+
+   
     /**
       * Check if the device is registered with the license key.
       * @param license The license key object.
@@ -139,13 +141,12 @@ module.exports = class Helpers {
       *
       * @return True if the license is registered with this machine and False otherwise.
       */
-    static IsOnRightMachine(license, isFloatingLicense = false, allowOverdraft = false) {
-        console.log("here");
-        return this.IsOnRightMachine(license, this.GetMachineCode(), isFloatingLicense, allowOverdraft);
+    static IsOnRightMachine(license, isFloatingLicense, allowOverdraft) {
+        return this.IsOnRightMachineCustom(license, this.GetMachineCode(), isFloatingLicense, allowOverdraft);
     }
 
     /**
-      * Check if the device is registered with the license key.
+      * Check if the device is registered with the license key. This method allows you to pass in a custom machine code.
       * @param license The license key object.
       * @param machineCode The machine code of the current device.
       * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
@@ -155,19 +156,25 @@ module.exports = class Helpers {
       *
       * @return True if the license is registered with this machine and False otherwise.
       */
-    static IsOnRightMachine(license, machineCode, isFloatingLicense = false, allowOverdraft = false) {
-
-        machineCode = this.GetMachineCode();
+    static IsOnRightMachineCustom(license, machineCode, isFloatingLicense, allowOverdraft) {
 
         if (license == null || license.ActivatedMachines == null) {
             return false;
         }
 
+        if(machineCode == null) {
+            machineCode = this.GetMachineCode();
+        }
+
         var res = false;
 
+        console.log(isFloatingLicense);
+
         if (isFloatingLicense) {
+            console.log("floating");
             license.ActivatedMachines.forEach(machine => {
-                if (machine.Mid.length >= 9 && machine.Mid == machineCode || allowOverdraft && machine.Mid.length >= 19 && machine.Mid == machineCode) {
+                if (machine.Mid.length >= 9 && machine.Mid.substring(9) == machineCode ||
+                 allowOverdraft && machine.Mid.length >= 19 && machine.Mid.substring(19) == machineCode) {
                     res = true;
                 }
             })

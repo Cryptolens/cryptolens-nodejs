@@ -10,4 +10,10 @@ const Helpers = require('./methods/Helpers.js');
 //result2.then((s)=> console.log(Helpers.LoadFromString(RSAPubKey, Helpers.SaveAsString(s))));
 
 
-console.log(Helpers.GetMachineCode_beta());
+//console.log(Helpers.GetMachineCode());
+
+var test = {};
+
+test = {"ActivatedMachines" :[{"Mid":"floating:" + Helpers.GetMachineCode()}]};
+
+console.log(Helpers.IsOnRightMachine(test,true));
