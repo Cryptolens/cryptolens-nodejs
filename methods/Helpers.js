@@ -130,7 +130,7 @@ module.exports = class Helpers {
     }
 
 
-   
+
     /**
       * Check if the device is registered with the license key.
       * @param license The license key object.
@@ -162,7 +162,7 @@ module.exports = class Helpers {
             return false;
         }
 
-        if(machineCode == null) {
+        if (machineCode == null) {
             machineCode = this.GetMachineCode();
         }
 
@@ -174,15 +174,14 @@ module.exports = class Helpers {
             console.log("floating");
             license.ActivatedMachines.forEach(machine => {
                 if (machine.Mid.length >= 9 && machine.Mid.substring(9) == machineCode ||
-                 allowOverdraft && machine.Mid.length >= 19 && machine.Mid.substring(19) == machineCode) {
+                    allowOverdraft && machine.Mid.length >= 19 && machine.Mid.substring(19) == machineCode) {
                     res = true;
                 }
             })
         } else {
-            
+
             license.ActivatedMachines.forEach(machine => {
-                if (machine.Mid == machineCode)
-                {
+                if (machine.Mid == machineCode) {
                     res = true;
                 }
             });
