@@ -28,6 +28,25 @@ module.exports = class Key {
       
     }
 
+		static Deactivate(token, ProductId, Key, MachineCode = "", Floating = false, OSInfo = null) {
+
+        return new Promise((resolve, reject) => {
+            request(`https://api.cryptolens.io/api/key/Deactivate?token=${token}&productId=${ProductId}&Key=${Key}&machineCode=${MachineCode}&floating=${Floating}&OSInfo=${OSInfo}`, { json: true }, (err, res, body) => {
+                if (err || body.result == "1") {
+                    console.warn(err);
+                    if(!err) {
+                        console.warn(body.message);
+                    }
+                    resolve(null);
+                } else {
+									console.warn(body.message);
+									resolve(null);
+                }
+            });
+        });
+      
+    }
+
     static GetKey(token, rsaPubKey, ProductId, Key, FieldsToReturn = 0, Metadata=false) {
 
         return new Promise((resolve, reject) => {
