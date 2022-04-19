@@ -8,7 +8,7 @@ module.exports = class Key {
         return new Promise((resolve, reject) => {
             (async () => {
                 try{
-                    const body = await got.post(`https://api.cryptolens.io/api/key/Activate?token=${token}&productId=${ProductId}&Key=${Key}&machineCode=${MachineCode}&fieldsToReturn=${FieldsToReturn}&Metadata=${Metadata}&FloatingTimeInterval=${FloatingTimeInterval}&MaxOverdraft=${MaxOverdraft}&Sign=true&SignMethod=1`).json();
+                    const body = await got(`https://api.cryptolens.io/api/key/Activate?token=${token}&productId=${ProductId}&Key=${Key}&machineCode=${MachineCode}&fieldsToReturn=${FieldsToReturn}&Metadata=${Metadata}&FloatingTimeInterval=${FloatingTimeInterval}&MaxOverdraft=${MaxOverdraft}&Sign=true&SignMethod=1`).json();
                     if (body.result == "1") {
                         console.warn(body.message);
                         resolve(null);
