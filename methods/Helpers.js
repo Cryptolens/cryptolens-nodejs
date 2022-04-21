@@ -66,7 +66,7 @@ module.exports = class Helpers {
             res = (execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", { encoding: 'utf8' }));
         }
 
-        return crypto.createHash('sha256').update(res).digest('hex');
+        return crypto.createHash('sha256').update(res).digest('hex').slice(0,20);
     }
 
     /**
