@@ -17,3 +17,5 @@ var test = {};
 test = {"ActivatedMachines" :[{"Mid":"floating:" + Helpers.GetMachineCode()}]};
 
 console.log(Helpers.IsOnRightMachine(test,true));
+
+console.log(Helpers.GetMachineCodeShort());
