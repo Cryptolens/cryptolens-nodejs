@@ -66,7 +66,16 @@ module.exports = class Helpers {
             res = (execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", { encoding: 'utf8' }));
         }
 
-        return crypto.createHash('sha256').update(res).digest('hex').slice(0,20);
+        return crypto.createHash('sha256').update(res).digest('hex');
+    }
+
+    /**
+     * Compute a shorter version of the machine code that is more easily to type for end users.
+     * Note, please use the corresponding Helpers.IsOnRightMachineShort method instead, when verifying
+     * if a license has been activated on this machine.
+     */
+    static GetMachineCodeShort() {
+        return this.GetMachineCode().slice(0, 20);
     }
 
     /**
@@ -143,6 +152,21 @@ module.exports = class Helpers {
       */
     static IsOnRightMachine(license, isFloatingLicense, allowOverdraft) {
         return this.IsOnRightMachineCustom(license, this.GetMachineCode(), isFloatingLicense, allowOverdraft);
+    }
+
+    /**
+      * Check if the device is registered with the license key. This method uses a shorter version of the machine code,
+      * computed using Helpers.GetMachineCodeShort.
+      * @param license The license key object.
+      * @param isFloatingLicense If this is a floating license, this parameter has to be set to true.
+      *                          You can enable floating licenses by setting @see ActivateModel.FloatingTimeInterval.
+      * @param allowOverdraft If floating licensing is enabled with overdraft, this parameter should be set to true.
+      *                       You can enable overdraft by setting ActivateModel.MaxOverdraft" to a value greater than 0.
+      *
+      * @return True if the license is registered with this machine and False otherwise.
+      */
+    static IsOnRightMachineShort(license, isFloatingLicense, allowOverdraft) {
+        return this.IsOnRightMachineCustom(license, this.GetMachineCodeShort(), isFloatingLicense, allowOverdraft);
     }
 
     /**
