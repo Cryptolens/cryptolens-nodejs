@@ -3,12 +3,18 @@ const helpers = require('../internal/HelperMethods.js');
 
 module.exports = class Key {
 
-    static Activate(token, rsaPubKey, ProductId, Key, MachineCode = "", FieldsToReturn = 0, Metadata = false, FloatingTimeInterval = 0, MaxOverdraft = 0, apiURL = "https://api.cryptolens.io") {
+    static Activate(token, rsaPubKey, ProductId, Key, MachineCode = "", FieldsToReturn = 0, Metadata = false, FloatingTimeInterval = 0, MaxOverdraft = 0, LicenseServerUrl = "https://api.cryptolens.io") {
 
+        console.log(LicenseServerUrl);
         return new Promise((resolve, reject) => {
             (async () => {
                 try{
-                    const body = await got(`${apiURL}/api/key/Activate?token=${token}&productId=${ProductId}&Key=${Key}&machineCode=${MachineCode}&fieldsToReturn=${FieldsToReturn}&Metadata=${Metadata}&FloatingTimeInterval=${FloatingTimeInterval}&MaxOverdraft=${MaxOverdraft}&Sign=true&SignMethod=1`).json();
+                    const body = await got.post(`${LicenseServerUrl}/api/key/Activate`, {
+                        body: `token=${encodeURIComponent(token)}&ProductId=${encodeURIComponent(ProductId)}&Key=${encodeURIComponent(Key)}&MachineCode=${encodeURIComponent(MachineCode)}&FieldsToReturn=${FieldsToReturn}&Metadata=${encodeURIComponent(Metadata)}&FloatingTimeInterval=${encodeURIComponent(FloatingTimeInterval)}&MaxOverdraft=${encodeURIComponent(MaxOverdraft)}&Sign=true&SignMethod=1`
+                    }).json();
+
+                    console.log(body);
+
                     if (body.result == "1") {
                         console.warn(body.message);
                         resolve(null);
@@ -30,12 +36,12 @@ module.exports = class Key {
 
     }
 
-    static Deactivate(token, ProductId, Key, MachineCode = "", Floating = false, OSInfo = null, apiURL = "https://api.cryptolens.io") {
+    static Deactivate(token, ProductId, Key, MachineCode = "", Floating = false, OSInfo = null, LicenseServerUrl = "https://api.cryptolens.io") {
 
         return new Promise((resolve, reject) => {
             (async () => {
                 try{
-                    const body = got(`${apiURL}/api/key/Deactivate?token=${token}&productId=${ProductId}&Key=${Key}&machineCode=${MachineCode}&floating=${Floating}&OSInfo=${OSInfo}`);
+                    const body = got(`${LicenseServerUrl}/api/key/Deactivate?token=${token}&productId=${ProductId}&Key=${Key}&machineCode=${MachineCode}&floating=${Floating}&OSInfo=${OSInfo}`);
                     if (body.result == "1") {
                         console.warn(body.message);
                         resolve(null);
@@ -51,12 +57,12 @@ module.exports = class Key {
 
     }
 
-    static GetKey(token, rsaPubKey, ProductId, Key, FieldsToReturn = 0, Metadata = false, apiURL = "https://api.cryptolens.io") {
+    static GetKey(token, rsaPubKey, ProductId, Key, FieldsToReturn = 0, Metadata = false, LicenseServerUrl = "https://api.cryptolens.io") {
 
         return new Promise((resolve, reject) => {
             (async () => {
                 try{
-                    const body = got(`${apiURL}/api/key/GetKey?token=${token}&productId=${ProductId}&Key=${Key}&fieldsToReturn=${FieldsToReturn}&Metadata=${Metadata}&Sign=true&SignMethod=1`);
+                    const body = got(`${LicenseServerUrl}/api/key/GetKey?token=${token}&productId=${ProductId}&Key=${Key}&fieldsToReturn=${FieldsToReturn}&Metadata=${Metadata}&Sign=true&SignMethod=1`);
                     if (body.result == "1") {
                         console.warn(body.message);
                         resolve(null);
