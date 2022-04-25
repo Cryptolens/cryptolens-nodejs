@@ -13,8 +13,6 @@ module.exports = class Key {
                         body: `token=${encodeURIComponent(token)}&ProductId=${encodeURIComponent(ProductId)}&Key=${encodeURIComponent(Key)}&MachineCode=${encodeURIComponent(MachineCode)}&FieldsToReturn=${FieldsToReturn}&Metadata=${encodeURIComponent(Metadata)}&FloatingTimeInterval=${encodeURIComponent(FloatingTimeInterval)}&MaxOverdraft=${encodeURIComponent(MaxOverdraft)}&Sign=true&SignMethod=1`
                     }).json();
 
-                    console.log(body);
-
                     if (body.result == "1") {
                         console.warn(body.message);
                         resolve(null);
