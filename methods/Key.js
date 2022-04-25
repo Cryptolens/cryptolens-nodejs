@@ -64,7 +64,10 @@ module.exports = class Key {
         return new Promise((resolve, reject) => {
             (async () => {
                 try{
-                    const body = got(`${LicenseServerUrl}/api/key/GetKey?token=${token}&productId=${ProductId}&Key=${Key}&fieldsToReturn=${FieldsToReturn}&Metadata=${Metadata}&Sign=true&SignMethod=1`);
+                    const body = await got.post(`${LicenseServerUrl}/api/key/GetKey`, {
+                        body: `token=${encodeURIComponent(token)}&ProductId=${encodeURIComponent(ProductId)}&Key=${encodeURIComponent(Key)}&MachineCode=${encodeURIComponent(MachineCode)}&FieldsToReturn=${FieldsToReturn}&Metadata=${encodeURIComponent(Metadata)}`
+                    }).json();
+
                     if (body.result == "1") {
                         console.warn(body.message);
                         resolve(null);
