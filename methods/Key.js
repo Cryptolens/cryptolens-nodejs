@@ -3,12 +3,26 @@ const helpers = require('../internal/HelperMethods.js');
 
 module.exports = class Key {
 
-    static Activate(token, rsaPubKey, ProductId, Key, MachineCode = "", FieldsToReturn = 0, Metadata = false, FloatingTimeInterval = 0, MaxOverdraft = 0) {
+    static Activate(token, rsaPubKey, ProductId, Key, MachineCode = "", FieldsToReturn = 0, Metadata = false, FloatingTimeInterval = 0, MaxOverdraft = 0, LicenseServerUrl = "https://api.cryptolens.io") {
 
         return new Promise((resolve, reject) => {
             (async () => {
                 try{
-                    const body = await got(`https://api.cryptolens.io/api/key/Activate?token=${token}&productId=${ProductId}&Key=${Key}&machineCode=${MachineCode}&fieldsToReturn=${FieldsToReturn}&Metadata=${Metadata}&FloatingTimeInterval=${FloatingTimeInterval}&MaxOverdraft=${MaxOverdraft}&Sign=true&SignMethod=1`).json();
+                    const body = await got.post(`${LicenseServerUrl}/api/key/Activate`, {
+                        form: {
+                            token : token,
+                            ProductId : ProductId,
+                            Key : Key,
+                            MachineCode : MachineCode,
+                            FieldsToReturn : FieldsToReturn,
+                            Metadata : Metadata,
+                            FloatingTimeInterval : FloatingTimeInterval,
+                            MaxOverdraft: MaxOverdraft,
+                            Sign: true,
+                            SignMethod : 1
+                        }
+                    }).json();
+
                     if (body.result == "1") {
                         console.warn(body.message);
                         resolve(null);
@@ -27,15 +41,25 @@ module.exports = class Key {
                 };
             })();
         });
-
     }
 
-    static Deactivate(token, ProductId, Key, MachineCode = "", Floating = false, OSInfo = null) {
+    static Deactivate(token, ProductId, Key, MachineCode = "", Floating = false, OSInfo = null, LicenseServerUrl = "https://api.cryptolens.io") {
 
         return new Promise((resolve, reject) => {
             (async () => {
                 try{
-                    const body = got(`https://api.cryptolens.io/api/key/Deactivate?token=${token}&productId=${ProductId}&Key=${Key}&machineCode=${MachineCode}&floating=${Floating}&OSInfo=${OSInfo}`);
+
+                    const body = await got.post(`${LicenseServerUrl}/api/key/Deactivate`, {
+                        form: {
+                            token : token,
+                            ProductId : ProductId,
+                            Key : Key,
+                            MachineCode : MachineCode,
+                            Floating: Floating,
+                            OSInfo : OSInfo
+                        }
+                    }).json();
+
                     if (body.result == "1") {
                         console.warn(body.message);
                         resolve(null);
@@ -51,12 +75,23 @@ module.exports = class Key {
 
     }
 
-    static GetKey(token, rsaPubKey, ProductId, Key, FieldsToReturn = 0, Metadata = false) {
+    static GetKey(token, rsaPubKey, ProductId, Key, FieldsToReturn = 0, Metadata = false, LicenseServerUrl = "https://api.cryptolens.io") {
 
         return new Promise((resolve, reject) => {
             (async () => {
                 try{
-                    const body = got(`https://api.cryptolens.io/api/key/GetKey?token=${token}&productId=${ProductId}&Key=${Key}&fieldsToReturn=${FieldsToReturn}&Metadata=${Metadata}&Sign=true&SignMethod=1`);
+                    const body = await got.post(`${LicenseServerUrl}/api/key/GetKey`, {
+                        form: {
+                            token : token,
+                            ProductId : ProductId,
+                            Key : Key,
+                            FieldsToReturn : FieldsToReturn,
+                            Metadata : Metadata,
+                            Sign: true,
+                            SignMethod : 1
+                        }
+                    }).json();
+
                     if (body.result == "1") {
                         console.warn(body.message);
                         resolve(null);
@@ -75,6 +110,5 @@ module.exports = class Key {
                 }
             })();
         });
-
     }
 }
