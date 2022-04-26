@@ -41,7 +41,6 @@ module.exports = class Key {
                 };
             })();
         });
-
     }
 
     static Deactivate(token, ProductId, Key, MachineCode = "", Floating = false, OSInfo = null, LicenseServerUrl = "https://api.cryptolens.io") {
@@ -60,7 +59,6 @@ module.exports = class Key {
                             OSInfo : OSInfo
                         }
                     }).json();
-
 
                     if (body.result == "1") {
                         console.warn(body.message);
@@ -87,14 +85,12 @@ module.exports = class Key {
                             token : token,
                             ProductId : ProductId,
                             Key : Key,
-                            MachineCode : MachineCode,
                             FieldsToReturn : FieldsToReturn,
                             Metadata : Metadata,
                             Sign: true,
                             SignMethod : 1
                         }
                     }).json();
-
 
                     if (body.result == "1") {
                         console.warn(body.message);
@@ -114,6 +110,5 @@ module.exports = class Key {
                 }
             })();
         });
-
     }
 }
