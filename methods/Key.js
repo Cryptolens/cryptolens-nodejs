@@ -63,11 +63,9 @@ module.exports = class Key {
                     }).json();
 
                     if (body.result == "1") {
-                        console.warn(body.message);
-                        resolve(null);
+                        reject(new Error(body.message));
                     } else {
-                        console.warn(body.message);
-                        resolve(null);
+                        resolve(body.message);
                     }
                 }catch(error){
                     if(error.name == "HTTPError") {
