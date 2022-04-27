@@ -7,6 +7,7 @@ module.exports = class Key {
 
         return new Promise((resolve, reject) => {
             (async () => {
+                
                 try{
                     const body = await got.post(`${LicenseServerUrl}/api/key/Activate`, {
                         form: {
@@ -20,24 +21,26 @@ module.exports = class Key {
                             MaxOverdraft: MaxOverdraft,
                             Sign: true,
                             SignMethod : 1
-                        }
+                        },
                     }).json();
 
                     if (body.result == "1") {
-                        console.warn(body.message);
-                        resolve(null);
+                        reject(new Error(body.message));
                     } else {
                         if (helpers.VerifySignature(body, rsaPubKey)) {
                             var license = JSON.parse(Buffer.from(body["licenseKey"], "base64").toString("utf-8"));
                             license.RawResponse = body;
                             resolve(license);
                         } else {
-                            console.warn("Signature verification failed.");
-                            resolve(null);
+                            reject(new Error("Signature verification failed."));
                         }
                     }
                 } catch(error) {
-                    reject(error);
+                    if(error.name == "HTTPError") {
+                        reject(new Error(JSON.parse(error.response.body).message));
+                    } else {
+                        reject(error);
+                    } 
                 };
             })();
         });
@@ -48,7 +51,6 @@ module.exports = class Key {
         return new Promise((resolve, reject) => {
             (async () => {
                 try{
-
                     const body = await got.post(`${LicenseServerUrl}/api/key/Deactivate`, {
                         form: {
                             token : token,
@@ -61,14 +63,16 @@ module.exports = class Key {
                     }).json();
 
                     if (body.result == "1") {
-                        console.warn(body.message);
-                        resolve(null);
+                        reject(new Error(body.message));
                     } else {
-                        console.warn(body.message);
-                        resolve(null);
+                        resolve(body.message);
                     }
                 }catch(error){
-                    reject(error)
+                    if(error.name == "HTTPError") {
+                        reject(new Error(JSON.parse(error.response.body).message));
+                    } else {
+                        reject(error);
+                    } 
                 }
             })();
         });
@@ -93,20 +97,22 @@ module.exports = class Key {
                     }).json();
 
                     if (body.result == "1") {
-                        console.warn(body.message);
-                        resolve(null);
+                        reject(new Error(body.message));
                     } else {
                         if (helpers.VerifySignature(body, rsaPubKey)) {
                             var license = JSON.parse(Buffer.from(body["licenseKey"], "base64").toString("utf-8"));
                             license.RawResponse = body;
                             resolve(license);
                         } else {
-                            console.warn("Signature verification failed.");
-                            resolve(null);
+                            reject(new Error("Signature verification failed."));
                         }
                     }
                 }catch(error){
-                    reject(error)
+                    if(error.name == "HTTPError") {
+                        reject(new Error(JSON.parse(error.response.body).message));
+                    } else {
+                        reject(error);
+                    } 
                 }
             })();
         });
