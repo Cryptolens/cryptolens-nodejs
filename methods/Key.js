@@ -24,16 +24,14 @@ module.exports = class Key {
                     }).json();
 
                     if (body.result == "1") {
-                        console.warn(body.message);
-                        resolve(null);
+                        reject(new Error(body.message));
                     } else {
                         if (helpers.VerifySignature(body, rsaPubKey)) {
                             var license = JSON.parse(Buffer.from(body["licenseKey"], "base64").toString("utf-8"));
                             license.RawResponse = body;
                             resolve(license);
                         } else {
-                            console.warn("Signature verification failed.");
-                            resolve(null);
+                            reject(new Error("Signature verification failed."));
                         }
                     }
                 } catch(error) {
