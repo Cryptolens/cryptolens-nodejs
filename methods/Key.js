@@ -7,6 +7,7 @@ module.exports = class Key {
 
         return new Promise((resolve, reject) => {
             (async () => {
+                
                 try{
                     const body = await got.post(`${LicenseServerUrl}/api/key/Activate`, {
                         form: {
@@ -20,7 +21,7 @@ module.exports = class Key {
                             MaxOverdraft: MaxOverdraft,
                             Sign: true,
                             SignMethod : 1
-                        }
+                        },
                     }).json();
 
                     if (body.result == "1") {
@@ -35,7 +36,11 @@ module.exports = class Key {
                         }
                     }
                 } catch(error) {
-                    reject(error);
+                    if(error.name == "HTTPError") {
+                        reject(new Error(JSON.parse(error.response.body).message));
+                    } else {
+                        reject(error);
+                    } 
                 };
             })();
         });
