@@ -118,7 +118,7 @@ module.exports = class Key {
                     noOfDays: NoOfDays
                 }
 
-                const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/CreateKeyFromTemplate`, formBody)
+                const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/ExtendLicense`, formBody)
                 resolve(res)
             } catch (error) {
                 reject(error);
