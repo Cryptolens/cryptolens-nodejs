@@ -7,7 +7,7 @@ module.exports = class Key {
 
         return new Promise((resolve, reject) => {
             (async () => {
-                
+
                 try{
                     const body = await got.post(`${LicenseServerUrl}/api/key/Activate`, {
                         form: {
@@ -24,7 +24,7 @@ module.exports = class Key {
                         },
                     }).json();
 
-                    if (body.result == "1") {
+                    if (body.result === "1") {
                         reject(new Error(body.message));
                     } else {
                         if (helpers.VerifySignature(body, rsaPubKey)) {
@@ -36,11 +36,11 @@ module.exports = class Key {
                         }
                     }
                 } catch(error) {
-                    if(error.name == "HTTPError") {
+                    if(error.name === "HTTPError") {
                         reject(new Error(JSON.parse(error.response.body).message));
                     } else {
                         reject(error);
-                    } 
+                    }
                 };
             })();
         });
@@ -62,17 +62,17 @@ module.exports = class Key {
                         }
                     }).json();
 
-                    if (body.result == "1") {
+                    if (body.result === "1") {
                         reject(new Error(body.message));
                     } else {
                         resolve(body.message);
                     }
                 }catch(error){
-                    if(error.name == "HTTPError") {
+                    if(error.name === "HTTPError") {
                         reject(new Error(JSON.parse(error.response.body).message));
                     } else {
                         reject(error);
-                    } 
+                    }
                 }
             })();
         });
@@ -96,7 +96,7 @@ module.exports = class Key {
                         }
                     }).json();
 
-                    if (body.result == "1") {
+                    if (body.result === "1") {
                         reject(new Error(body.message));
                     } else {
                         if (helpers.VerifySignature(body, rsaPubKey)) {
@@ -108,11 +108,11 @@ module.exports = class Key {
                         }
                     }
                 }catch(error){
-                    if(error.name == "HTTPError") {
+                    if(error.name === "HTTPError") {
                         reject(new Error(JSON.parse(error.response.body).message));
                     } else {
                         reject(error);
-                    } 
+                    }
                 }
             })();
         });

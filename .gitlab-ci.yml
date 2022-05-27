@@ -20,40 +20,7 @@ include:
     - tags
 
 stages:
-  - install_deps
-  - lint
-  - test
   - deploy
-
-install_deps:
-  stage: install_deps
-  interruptible: true
-  <<: *only-default
-  script:
-    - npm ci
-  cache:
-    - <<: *node_modules-cache
-      policy: pull-push
-
-lint:
-  stage: lint
-  interruptible: true
-  <<: *only-default
-  needs: ["install_deps"]
-  script:
-    - npm run lint
-  cache:
-    - <<: *node_modules-cache
-
-build:
-  stage: test
-  interruptible: true
-  <<: *only-default
-  needs: ["install_deps"]
-  script:
-    - npm run build
-  cache:
-    - <<: *node_modules-cache
 
 deploy:
   stage: deploy
