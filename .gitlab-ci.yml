@@ -21,6 +21,7 @@ include:
 
 stages:
   - deploy
+  - test
 
 deploy:
   stage: deploy
