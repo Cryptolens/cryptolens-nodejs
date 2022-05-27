@@ -23,7 +23,7 @@ stages:
   - install_deps
   - lint
   - test
-  - release
+  - deploy
 
 install_deps:
   stage: install_deps
