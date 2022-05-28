@@ -1,4 +1,4 @@
-image: node:16.13.2 # @apollo/federation@0.27.0: The engine "node" is incompatible with this module. Expected version ">=12.13.0 <17.0". Got "17.4.0"
+image: node:latest
 
 .node_modules-cache: &node_modules-cache
   key:
@@ -23,10 +23,19 @@ stages:
   - deploy
   - test
 
+variables:
+  NPM_TOKEN: ${CI_JOB_TOKEN}
+
 deploy:
   stage: deploy
   only:
     - main
-  script:
+  before_script:
+    - npm install
+    - npx --yes @jacobbubu/gitlab-ci-registry ./package.json
     - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" > .npmrc
+  script:
     - npm publish
+  cache:
+    - <<: *node_modules-cache
+      policy: pull-push

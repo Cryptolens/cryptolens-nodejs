@@ -1,5 +1,5 @@
 {
-  "name": "cryptolens",
+  "name": "@sec-auditor/cryptolens-nodejs",
   "version": "1.0.4",
   "description": "Client API for NodeJS to access Cryptolens Software Licensing API",
   "main": "main.js",
