@@ -125,4 +125,58 @@ module.exports = class Key {
             }
         });
     }
+
+    static AddFeature(token, ProductId, Key, Feature, LicenseServerUrl = "https://api.cryptolens.io") {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const formBody = {
+                    token: token,
+                    productId: ProductId,
+                    key: Key,
+                    feature: Feature
+                }
+
+                const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/AddFeature`, formBody)
+                resolve(res)
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    static RemoveFeature(token, ProductId, Key, Feature, LicenseServerUrl = "https://api.cryptolens.io") {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const formBody = {
+                    token: token,
+                    productId: ProductId,
+                    key: Key,
+                    feature: Feature
+                }
+
+                const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/RemoveFeature`, formBody)
+                resolve(res)
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    static ChangeNotes(token, ProductId, Key, Notes, LicenseServerUrl = "https://api.cryptolens.io") {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const formBody = {
+                    token: token,
+                    productId: ProductId,
+                    key: Key,
+                    notes: Notes
+                }
+
+                const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/ChangeNotes`, formBody)
+                resolve(res)
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 }
