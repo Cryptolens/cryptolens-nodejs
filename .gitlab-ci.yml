@@ -1,0 +1,41 @@
+image: node:latest
+
+.node_modules-cache: &node_modules-cache
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+  policy: pull
+
+include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+# https://docs.gitlab.com/ee/ci/merge_request_pipelines/
+.only-default: &only-default
+  only:
+    - web
+    - pushes
+    - merge_requests
+    - tags
+
+stages:
+  - deploy
+  - test
+
+variables:
+  NPM_TOKEN: ${CI_JOB_TOKEN}
+
+deploy:
+  stage: deploy
+  only:
+    - main
+  before_script:
+    - npm install
+    - npx --yes @jacobbubu/gitlab-ci-registry ./package.json
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" > .npmrc
+  script:
+    - npm publish
+  cache:
+    - <<: *node_modules-cache
+      policy: pull-push
