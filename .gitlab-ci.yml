@@ -28,8 +28,8 @@ variables:
 
 deploy:
   stage: deploy
-  only:
-    - main
+#  only:
+#    - main
   before_script:
     - npm ci --cache .npm --prefer-offline
     - |
