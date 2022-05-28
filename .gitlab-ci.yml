@@ -23,10 +23,22 @@ stages:
   - deploy
   - test
 
+variables:
+  NPM_TOKEN: ${CI_JOB_TOKEN}
+
 deploy:
   stage: deploy
   only:
     - main
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+    - |
+      {
+        echo "@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/"
+        echo "${CI_API_V4_URL#https?}/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=\${CI_JOB_TOKEN}"
+      } | tee -a .npmrc  -
   script:
-    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" > .npmrc
     - npm publish
+  cache:
+    - <<: *node_modules-cache
+      policy: pull-push
