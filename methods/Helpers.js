@@ -1,6 +1,6 @@
 const helpers = require('../internal/HelperMethods.js');
 const { execSync } = require("child_process");
-var crypto = require('crypto');
+const crypto = require('crypto');
 
 
 module.exports = class Helpers {
@@ -30,12 +30,12 @@ module.exports = class Helpers {
      */
     static LoadFromString(rsaPubKey, string, signatureExpirationInterval = 0) {
         try {
-            var response = JSON.parse(string);
+            const response = JSON.parse(string);
 
             if (helpers.VerifySignature(response, rsaPubKey)) {
-                var licenseKey = JSON.parse(Buffer.from(response.licenseKey, 'base64').toString("utf-8"));
-                var signed = new Date(licenseKey.SignDate * 1000);
-                var exp = new Date(signed.getFullYear(), signed.getMonth(), signed.getDate() + signatureExpirationInterval);
+                const licenseKey = JSON.parse(Buffer.from(response.licenseKey, 'base64').toString("utf-8"));
+                const signed = new Date(licenseKey.SignDate * 1000);
+                const exp = new Date(signed.getFullYear(), signed.getMonth(), signed.getDate() + signatureExpirationInterval);
                 if (signatureExpirationInterval > 0 && new Date() > exp) {
                     console.warn("The license has expired.");
                     return null;
@@ -55,7 +55,7 @@ module.exports = class Helpers {
      */
     static GetMachineCode() {
 
-        var res = "";
+        let res = "";
 
         if (process.platform === "win32") {
             res = (execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', { encoding: 'utf8' }));
@@ -118,21 +118,21 @@ module.exports = class Helpers {
             return false;
         }
 
-        if (feature == 1 && licenseKey.F1)
+        if (feature === 1 && licenseKey.F1)
             return true;
-        if (feature == 2 && licenseKey.F2)
+        if (feature === 2 && licenseKey.F2)
             return true;
-        if (feature == 3 && licenseKey.F3)
+        if (feature === 3 && licenseKey.F3)
             return true;
-        if (feature == 4 && licenseKey.F4)
+        if (feature === 4 && licenseKey.F4)
             return true;
-        if (feature == 5 && licenseKey.F5)
+        if (feature === 5 && licenseKey.F5)
             return true;
-        if (feature == 6 && licenseKey.F6)
+        if (feature === 6 && licenseKey.F6)
             return true;
-        if (feature == 7 && licenseKey.F7)
+        if (feature === 7 && licenseKey.F7)
             return true;
-        if (feature == 8 && licenseKey.F8)
+        if (feature === 8 && licenseKey.F8)
             return true;
 
         return false;
@@ -190,22 +190,22 @@ module.exports = class Helpers {
             machineCode = this.GetMachineCode();
         }
 
-        var res = false;
+        let res = false;
 
         console.log(isFloatingLicense);
 
         if (isFloatingLicense) {
             console.log("floating");
             license.ActivatedMachines.forEach(machine => {
-                if (machine.Mid.length >= 9 && machine.Mid.substring(9) == machineCode ||
-                    allowOverdraft && machine.Mid.length >= 19 && machine.Mid.substring(19) == machineCode) {
+                if (machine.Mid.length >= 9 && machine.Mid.substring(9) === machineCode ||
+                    allowOverdraft && machine.Mid.length >= 19 && machine.Mid.substring(19) === machineCode) {
                     res = true;
                 }
             })
         } else {
 
             license.ActivatedMachines.forEach(machine => {
-                if (machine.Mid == machineCode) {
+                if (machine.Mid === machineCode) {
                     res = true;
                 }
             });
