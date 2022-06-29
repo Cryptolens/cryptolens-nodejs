@@ -61,7 +61,7 @@ module.exports = class Helpers {
             res = (execSync('cmd /c powershell.exe -Command "(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID"', { encoding: 'utf8' }));
             res = res.substring(res.indexOf("UUID")).trim();
         } else if (process.platform === "linux") {
-            res = (execSync("findmnt", "--output=UUID --noheadings --target=/", { encoding: 'utf8' }));
+            res = (execSync("findmnt --output=UUID --noheadings --target=/boot", { encoding: 'utf8' }));
         } else if (process.platform === "darwin") {
             res = (execSync("system_profiler SPHardwareDataType | awk '/UUID/ { print $3; }'", { encoding: 'utf8' }));
         }
