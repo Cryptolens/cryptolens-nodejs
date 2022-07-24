@@ -14,20 +14,22 @@ npm add cryptolens
 To verify a license key, you can use the code below. The RSAPublicKey, token and the product id can be found on [this page](https://help.cryptolens.io/examples/key-verification).
 
 ```js
-const Key = require('cryptolens').Key;
+const key = require('cryptolens').Key;
 const Helpers = require('cryptolens').Helpers;
 
-var RSAPubKey = "{Your RSA Public key, which can be found here: https://app.cryptolens.io/User/Security}";
-var result = Key.Activate(token="{Access token with with Activate permission}", RSAPubKey, ProductId=3349, Key="GEBNC-WZZJD-VJIHG-GCMVD", MachineCode=Helpers.GetMachineCode());
+var RSAPubKey = "Your RSA Public key, which can be found here: https://app.cryptolens.io/User/Security";
+var result = key.Activate(token="Access token with with Activate permission", RSAPubKey, ProductId=3349, Key="GEBNC-WZZJD-VJIHG-GCMVD", MachineCode=Helpers.GetMachineCode());
 
 result.then(function(license) {
-    if (!license) {
-        // failure
-        return;
-    }
+
+    // success
     
     // Please see https://app.cryptolens.io/docs/api/v3/model/LicenseKey for a complete list of parameters.
     console.log(license.Created);
+
+}).catch(function(error) {
+    // in case of an error, an Error object is returned.
+    console.log(error.message);
 });
 ```
 
