@@ -91,7 +91,119 @@ module.exports = class Key {
             })();
         });
     }
-    
+
+    static CreateKeyFromTemplate(token, LicenseTemplateId, LicenseServerUrl = "https://api.cryptolens.io") {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const formBody = {
+                    token: token,
+                    LicenseTemplateId: LicenseTemplateId
+                }
+
+                const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/CreateKeyFromTemplate`, formBody)
+                resolve(res.key)
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    static CreateTrialKey(token, ProductId, MachineCode = "", LicenseServerUrl = "https://api.cryptolens.io") {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const body = await got
+                    .post(`${LicenseServerUrl}/api/key/CreateTrialKey`, {
+                        form: {
+                            token: token,
+                            ProductId: ProductId,
+                            MachineCode: MachineCode,
+                        },
+                    })
+                    .json();
+                console.log(body);
+                if (body.result == "1") {
+                    console.warn(body.message);
+                    resolve(null);
+                } else {
+                    console.warn(body.message);
+                    resolve(body.key);
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    static CreateKey(
+        token,
+        ProductId,
+        Period,
+        Notes = "",
+        Block = false,
+        CustomerId = null,
+        TrialActivation = false,
+        MaxNoOfMachines = 0,
+        AllowedMachines = null,
+        ResellerId = 0,
+        NoOfKeys = 1,
+        F1 = false,
+        F2 = false,
+        F3 = false,
+        F4 = false,
+        F5 = false,
+        F6 = false,
+        F7 = false,
+        F8 = false,
+        NewCustomer = false,
+        AddOrUseExistingCustomer = false,
+        LicenseServerUrl = "https://api.cryptolens.io"
+    ) {
+        return new Promise((resolve, reject) => {
+            (async () => {
+                try {
+                    const body = await got
+                        .post(`${LicenseServerUrl}/api/key/CreateKey`, {
+                            form: {
+                                token: token,
+                                ProductId: ProductId,
+                                Period: Period,
+                                Notes: Notes,
+                                Block: Block,
+                                CustomerId: CustomerId,
+                                TrialActivation: TrialActivation,
+                                MaxNoOfMachines: MaxNoOfMachines,
+                                AllowedMachines: AllowedMachines,
+                                ResellerId: ResellerId,
+                                NoOfKeys: NoOfKeys,
+                                F1: F1,
+                                F2: F2,
+                                F3: F3,
+                                F4: F4,
+                                F5: F5,
+                                F6: F6,
+                                F7: F7,
+                                F8: F8,
+                                NewCustomer : NewCustomer,
+                                AddOrUseExistingCustomer : AddOrUseExistingCustomer
+                            },
+                        })
+                        .json();
+
+                    if (body.result == "1") {
+                        console.warn(body.message);
+                        resolve(null);
+                    } else {
+                        console.warn(body.message);
+                        resolve(body);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            })();
+        });
+    }
+
+
     static ExtendLicense(token, ProductId, Key, NoOfDays = 0, LicenseServerUrl = "https://api.cryptolens.io") {
         return new Promise(async (resolve, reject) => {
             try {
