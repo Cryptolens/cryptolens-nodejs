@@ -5,31 +5,31 @@ module.exports = class Key {
 
     static Activate(token, rsaPubKey, ProductId, Key, MachineCode = "", FieldsToReturn = 0, Metadata = false, FloatingTimeInterval = 0, MaxOverdraft = 0, LicenseServerUrl = "https://api.cryptolens.io") {
         return new Promise(async (resolve, reject) => {
-           try {
-               const formBody = {
-                   token: token,
-                   ProductId: ProductId,
-                   Key: Key,
-                   MachineCode: MachineCode,
-                   FieldsToReturn: FieldsToReturn,
-                   Metadata: Metadata,
-                   FloatingTimeInterval: FloatingTimeInterval,
-                   MaxOverdraft: MaxOverdraft,
-                   Sign: true,
-                   SignMethod: 1
-               }
-               const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/Activate`, formBody)
+            try {
+                const formBody = {
+                    token: token,
+                    ProductId: ProductId,
+                    Key: Key,
+                    MachineCode: MachineCode,
+                    FieldsToReturn: FieldsToReturn,
+                    Metadata: Metadata,
+                    FloatingTimeInterval: FloatingTimeInterval,
+                    MaxOverdraft: MaxOverdraft,
+                    Sign: true,
+                    SignMethod: 1
+                }
+                const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/Activate`, formBody)
 
-               if (helpers.VerifySignature(res, rsaPubKey)) {
-                   const license = JSON.parse(Buffer.from(res["licenseKey"], "base64").toString("utf-8"));
-                   license.RawResponse = res;
-                   resolve(license);
-               } else {
-                   reject(new Error("Signature verification failed."));
-               }
-           } catch (error) {
-               reject(error);
-           }
+                if (helpers.VerifySignature(res, rsaPubKey)) {
+                    const license = JSON.parse(Buffer.from(res["licenseKey"], "base64").toString("utf-8"));
+                    license.RawResponse = res;
+                    resolve(license);
+                } else {
+                    reject(new Error("Signature verification failed."));
+                }
+            } catch (error) {
+                reject(error);
+            }
         });
     }
 
@@ -57,16 +57,16 @@ module.exports = class Key {
 
         return new Promise((resolve, reject) => {
             (async () => {
-                try{
+                try {
                     const body = await got.post(`${LicenseServerUrl}/api/key/GetKey`, {
                         form: {
-                            token : token,
-                            ProductId : ProductId,
-                            Key : Key,
-                            FieldsToReturn : FieldsToReturn,
-                            Metadata : Metadata,
+                            token: token,
+                            ProductId: ProductId,
+                            Key: Key,
+                            FieldsToReturn: FieldsToReturn,
+                            Metadata: Metadata,
                             Sign: true,
-                            SignMethod : 1
+                            SignMethod: 1
                         }
                     }).json();
 
@@ -81,8 +81,8 @@ module.exports = class Key {
                             reject(new Error("Signature verification failed."));
                         }
                     }
-                }catch(error){
-                    if(error.name === "HTTPError") {
+                } catch (error) {
+                    if (error.name === "HTTPError") {
                         reject(new Error(JSON.parse(error.response.body).message));
                     } else {
                         reject(error);
@@ -107,6 +107,102 @@ module.exports = class Key {
             }
         });
     }
+
+    static CreateTrialKey(token, ProductId, MachineCode = "", LicenseServerUrl = "https://api.cryptolens.io") {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const body = await got
+                    .post(`${LicenseServerUrl}/api/key/CreateTrialKey`, {
+                        form: {
+                            token: token,
+                            ProductId: ProductId,
+                            MachineCode: MachineCode,
+                        },
+                    })
+                    .json();
+                console.log(body);
+                if (body.result == "1") {
+                    console.warn(body.message);
+                    resolve(null);
+                } else {
+                    console.warn(body.message);
+                    resolve(body.key);
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    static CreateKey(
+        token,
+        ProductId,
+        Period,
+        Notes = "",
+        Block = false,
+        CustomerId = null,
+        TrialActivation = false,
+        MaxNoOfMachines = 0,
+        AllowedMachines = null,
+        ResellerId = 0,
+        NoOfKeys = 1,
+        F1 = false,
+        F2 = false,
+        F3 = false,
+        F4 = false,
+        F5 = false,
+        F6 = false,
+        F7 = false,
+        F8 = false,
+        NewCustomer = false,
+        AddOrUseExistingCustomer = false,
+        LicenseServerUrl = "https://api.cryptolens.io"
+    ) {
+        return new Promise((resolve, reject) => {
+            (async () => {
+                try {
+                    const body = await got
+                        .post(`${LicenseServerUrl}/api/key/CreateKey`, {
+                            form: {
+                                token: token,
+                                ProductId: ProductId,
+                                Period: Period,
+                                Notes: Notes,
+                                Block: Block,
+                                CustomerId: CustomerId,
+                                TrialActivation: TrialActivation,
+                                MaxNoOfMachines: MaxNoOfMachines,
+                                AllowedMachines: AllowedMachines,
+                                ResellerId: ResellerId,
+                                NoOfKeys: NoOfKeys,
+                                F1: F1,
+                                F2: F2,
+                                F3: F3,
+                                F4: F4,
+                                F5: F5,
+                                F6: F6,
+                                F7: F7,
+                                F8: F8,
+                                NewCustomer : NewCustomer,
+                                AddOrUseExistingCustomer : AddOrUseExistingCustomer
+                            },
+                        })
+                        .json();
+
+                    if (body.result == "1") {
+                        console.warn(body.message);
+                        resolve(null);
+                    } else {
+                        console.warn(body.message);
+                        resolve(body);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            })();
+        });
+    }
+
 
     static ExtendLicense(token, ProductId, Key, NoOfDays = 0, LicenseServerUrl = "https://api.cryptolens.io") {
         return new Promise(async (resolve, reject) => {
