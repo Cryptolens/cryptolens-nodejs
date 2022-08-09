@@ -47,7 +47,8 @@ module.exports = class HelperMethods {
                             reject(new Error(JSON.parse(error.response.body).message));
                         } catch (e) {
                             reject(new Error("Could not parse the error message returned from the server. "+
-                            "If this error persists, please check that the LicenseServerUrl does not end with '/'."));
+                            "If this error persists, please check that the LicenseServerUrl does not end with '/'. "+
+                            "E.g. 'https://api.cryptolens.io' is correct whereas 'https://api.cryptolens.io/' is not."));
                         }
                     } else {
                         reject(error);
