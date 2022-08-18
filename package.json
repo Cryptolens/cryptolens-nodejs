@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/Cryptolens/cryptolens-nodejs#readme",
   "dependencies": {
-    "got": "12.2.0",
+    "got": "11.8.5",
     "node-rsa": "^1.1.1"
   }
 }
