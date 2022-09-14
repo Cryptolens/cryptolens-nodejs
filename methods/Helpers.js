@@ -1,6 +1,7 @@
 const helpers = require('../internal/HelperMethods.js');
 const { execSync } = require("child_process");
 const crypto = require('crypto');
+const { features } = require('process');
 
 
 module.exports = class Helpers {
@@ -134,6 +135,55 @@ module.exports = class Helpers {
             return true;
         if (feature === 8 && licenseKey.F8)
             return true;
+
+        return false;
+    }
+
+    /**
+     * Check if the license has a certain feature enabled (i.e. set to true).
+     * @param licenseKey a license key object.
+     * @param feature The feature, eg 1 to 8.
+     * @return If the feature is set to true, true is returned and false otherwise.
+     */
+     static HasFeature_ex(licenseKey, featureName) {
+
+        if (licenseKey == null) {
+            return false;
+        }
+
+        if (!licenseKey["dataObjects"]) {
+            return false;
+        }
+        
+        var features = null;
+
+        for(const dobj of licenseKey["dataObjects"] ) {
+            if(dobj["Name"] == 'cryptolens_features') {
+                features = dobj["StringValue"];
+                break;
+            }
+        }
+
+        if (features == null) {
+            return false;
+        }
+
+        var array = JSON.parse(features);
+        
+        var featurePath = featureName.split("\\.");
+
+        var found = false;
+        for (let i = 0; i < featurePath.length; i++) {
+            found = false;
+
+            var index = -1;
+
+            for (let j = 0; j < array.length; j++) {
+                
+                
+            }
+            
+        }
 
         return false;
     }
