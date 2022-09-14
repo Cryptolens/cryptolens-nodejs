@@ -1,7 +1,6 @@
 const helpers = require('../internal/HelperMethods.js');
 const { execSync } = require("child_process");
 const crypto = require('crypto');
-const { features } = require('process');
 
 
 module.exports = class Helpers {
@@ -169,7 +168,7 @@ module.exports = class Helpers {
         }
 
         var array = JSON.parse(features);
-        
+
         var featurePath = featureName.split("\\.");
 
         var found = false;
