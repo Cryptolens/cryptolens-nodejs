@@ -179,9 +179,27 @@ module.exports = class Helpers {
 
             for (let j = 0; j < array.length; j++) {
                 
-                
+                if (!Array.isArray(array[j]) && array[j]==featurePath[i]) {
+                    found = true;
+                    break;
+                } else if(Array.isArray(array[j]) && array[j][0] == featurePath[i]) {
+                    found = true;
+                    index = j;
+                    break;
+                }   
+            }
+            if(!found) {
+                return false;
+            }
+
+            if(i+1 < featurePath.length && index != -1) {
+                array = array[index][1];
             }
             
+        }
+
+        if(!found){
+            return false;
         }
 
         return false;
