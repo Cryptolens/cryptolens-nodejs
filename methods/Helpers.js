@@ -106,8 +106,21 @@ module.exports = class Helpers {
         return !Helpers.HasExpired(licenseKey);
     }
 
+
     /**
-     * Check if the license has a certain feature enabled (i.e. set to true).
+     * Check if the license has a certain feature enabled (i.e. set to true). If the feature parameter is an integer, then
+     * this method will check against the 8 built in feature flags (F1..F8). If feature parameter is a string, the method
+     * will use a built in data object to determine if a certain feature exists. Below is more information about that:
+     * 
+     * <strong>Formatting: </strong> The name of the data object should be 'cryptolens_features' and it should be structured as a JSON array.
+     *   
+     * For example, <pre>["f1", "f2"]</pre><p>means f1 and f2 are true. You can also have feature bundling, eg. <pre>["f1", ["f2",["voice","image"]]]</pre>
+     * which means that f1 and f2 are true, as well as f2.voice and f2.image. You can set any depth, eg. you can have
+     * <pre>["f1", ["f2",[["voice",["all"]], "image"]]]</pre> means f2.voice.all is true as well as f2.voice and f2.
+     * The dots symbol is used to specify the "sub-features". 
+        
+     * Read more here: https://help.cryptolens.io/web-interface/feature-templates
+     * 
      * @param licenseKey a license key object.
      * @param feature The feature, eg 1 to 8.
      * @return If the feature is set to true, true is returned and false otherwise.
@@ -118,24 +131,81 @@ module.exports = class Helpers {
             return false;
         }
 
-        if (feature === 1 && licenseKey.F1)
+        if (!isNaN(feature)) {
+            if (feature === 1 && licenseKey.F1)
             return true;
-        if (feature === 2 && licenseKey.F2)
-            return true;
-        if (feature === 3 && licenseKey.F3)
-            return true;
-        if (feature === 4 && licenseKey.F4)
-            return true;
-        if (feature === 5 && licenseKey.F5)
-            return true;
-        if (feature === 6 && licenseKey.F6)
-            return true;
-        if (feature === 7 && licenseKey.F7)
-            return true;
-        if (feature === 8 && licenseKey.F8)
-            return true;
+            if (feature === 2 && licenseKey.F2)
+                return true;
+            if (feature === 3 && licenseKey.F3)
+                return true;
+            if (feature === 4 && licenseKey.F4)
+                return true;
+            if (feature === 5 && licenseKey.F5)
+                return true;
+            if (feature === 6 && licenseKey.F6)
+                return true;
+            if (feature === 7 && licenseKey.F7)
+                return true;
+            if (feature === 8 && licenseKey.F8)
+                return true;
 
-        return false;
+            return false;
+        }
+
+        if (!licenseKey["DataObjects"]) {
+            return false;
+        }
+        
+        var features = null;
+
+        for(const dobj of licenseKey["DataObjects"] ) {
+            if(dobj["Name"] == 'cryptolens_features') {
+                features = dobj["StringValue"];
+                break;
+            }
+        }
+
+        if (features == null) {
+            return false;
+        }
+
+        var array = JSON.parse(features);
+
+        var featurePath = feature.split("\.");
+
+        var found = false;
+
+        for (let i = 0; i < featurePath.length; i++) {
+            found = false;
+
+            var index = -1;
+
+            for (let j = 0; j < array.length; j++) {
+
+                if (!Array.isArray(array[j]) && array[j]==featurePath[i]) {
+                    found = true;
+                    break;
+                } else if(Array.isArray(array[j]) && array[j][0] == featurePath[i]) {
+                    found = true;
+                    index = j;
+                    break;
+                }   
+            }
+            if(!found) {
+                return false;
+            }
+
+            if(i+1 < featurePath.length && index != -1) {
+                array = array[index][1];
+            }
+            
+        }
+
+        if(!found){
+            return false;
+        }
+
+        return true;
     }
 
 
