@@ -165,7 +165,7 @@ module.exports = class Helpers {
             }
         }
 
-        if (features == null) {
+        if (features == null || feature.trim() == "") {
             return false;
         }
 
