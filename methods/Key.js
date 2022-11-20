@@ -275,4 +275,22 @@ module.exports = class Key {
             }
         });
     }
+    
+    static Block(token, ProductId, Key, LicenseServerUrl = "https://api.cryptolens.io") {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const formBody = {
+                    token: token,
+                    productId: ProductId,
+                    key: Key,
+                }
+
+                const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/BlockKey`, formBody)
+                resolve(res)
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
 }
