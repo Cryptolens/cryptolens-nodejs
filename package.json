@@ -1,6 +1,6 @@
 {
   "name": "cryptolens",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Client API for NodeJS to access Cryptolens Software Licensing API.",
   "main": "main.js",
   "scripts": {
