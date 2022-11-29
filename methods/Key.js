@@ -276,7 +276,7 @@ module.exports = class Key {
         });
     }
     
-    static Block(token, ProductId, Key, LicenseServerUrl = "https://api.cryptolens.io") {
+    static BlockKey(token, ProductId, Key, LicenseServerUrl = "https://api.cryptolens.io") {
         return new Promise(async (resolve, reject) => {
             try {
                 const formBody = {
