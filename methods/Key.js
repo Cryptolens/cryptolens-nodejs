@@ -21,7 +21,7 @@ module.exports = class Key {
                 const res = await helpers.CallAPI(`${LicenseServerUrl}/api/key/Activate`, formBody)
 
                 if (helpers.VerifySignature(res, rsaPubKey)) {
-                    const license = JSON.parse(Buffer.from(res["licenseKey"], "base64").toString("utf-8"));
+                    const license = JSON.parse(Buffer.from(helpers.GetValueCaseInsensitive(res,"licenseKey"), "base64").toString("utf-8"));
                     license.RawResponse = res;
                     resolve(license);
                 } else {
@@ -74,7 +74,7 @@ module.exports = class Key {
                         reject(new Error(body.message));
                     } else {
                         if (helpers.VerifySignature(body, rsaPubKey)) {
-                            const license = JSON.parse(Buffer.from(body["licenseKey"], "base64").toString("utf-8"));
+                            const license = JSON.parse(Buffer.from(helpers.GetValueCaseInsensitive(res,"licenseKey"), "base64").toString("utf-8"));
                             license.RawResponse = body;
                             resolve(license);
                         } else {

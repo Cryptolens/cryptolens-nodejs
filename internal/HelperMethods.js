@@ -11,7 +11,7 @@ module.exports = class HelperMethods {
         const key = new NodeRSA();
         const pubKey = HelperMethods.GetPublicKeyParams(rsaPubKey);
         key.importKey({ n: pubKey.modulus, e: pubKey.exponent }, 'components-public');
-        return key.verify(Buffer.from(response["licenseKey"], "base64"), Buffer.from(response["signature"], "base64"));
+        return key.verify(Buffer.from(this.GetValueCaseInsensitive(response,"licenseKey"), "base64"), Buffer.from(this.GetValueCaseInsensitive(response,"signature"), "base64"));
     }
 
     /**
@@ -56,5 +56,14 @@ module.exports = class HelperMethods {
                 }
             })();
         });
+    }
+
+    static GetValueCaseInsensitive(obj, key) {
+        for (var prop in obj) {
+            if (prop.toLowerCase() === key.toLowerCase()) {
+                return obj[prop];
+            }
+        }
+        return undefined;
     }
 }
