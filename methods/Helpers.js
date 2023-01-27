@@ -33,7 +33,7 @@ module.exports = class Helpers {
             const response = JSON.parse(string);
 
             if (helpers.VerifySignature(response, rsaPubKey)) {
-                const licenseKey = JSON.parse(Buffer.from(response.licenseKey, 'base64').toString("utf-8"));
+                const licenseKey = JSON.parse(Buffer.from(helpers.GetValueCaseInsensitive(response,"licenseKey"), 'base64').toString("utf-8"));
                 const signed = new Date(licenseKey.SignDate * 1000);
                 const exp = new Date(signed.getFullYear(), signed.getMonth(), signed.getDate() + signatureExpirationInterval);
                 if (signatureExpirationInterval > 0 && new Date() > exp) {
