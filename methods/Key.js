@@ -74,7 +74,7 @@ module.exports = class Key {
                         reject(new Error(body.message));
                     } else {
                         if (helpers.VerifySignature(body, rsaPubKey)) {
-                            const license = JSON.parse(Buffer.from(helpers.GetValueCaseInsensitive(res,"licenseKey"), "base64").toString("utf-8"));
+                            const license = JSON.parse(Buffer.from(helpers.GetValueCaseInsensitive(body,"licenseKey"), "base64").toString("utf-8"));
                             license.RawResponse = body;
                             resolve(license);
                         } else {
