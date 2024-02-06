@@ -11,7 +11,7 @@ module.exports = class Key {
                     ProductId: ProductId,
                     Key: Key,
                     MachineCode: MachineCode,
-                    FriendlyName: "",
+                    FriendlyName: FriendlyName,
                     FieldsToReturn: FieldsToReturn,
                     Metadata: Metadata,
                     FloatingTimeInterval: FloatingTimeInterval,
