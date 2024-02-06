@@ -3,7 +3,7 @@ const helpers = require('../internal/HelperMethods.js');
 
 module.exports = class Key {
 
-    static Activate(token, rsaPubKey, ProductId, Key, MachineCode = "", FieldsToReturn = 0, Metadata = false, FloatingTimeInterval = 0, MaxOverdraft = 0, LicenseServerUrl = "https://api.cryptolens.io") {
+    static Activate(token, rsaPubKey, ProductId, Key, MachineCode = "", FriendlyName = "", FieldsToReturn = 0, Metadata = false, FloatingTimeInterval = 0, MaxOverdraft = 0, LicenseServerUrl = "https://api.cryptolens.io") {
         return new Promise(async (resolve, reject) => {
             try {
                 const formBody = {
@@ -11,6 +11,7 @@ module.exports = class Key {
                     ProductId: ProductId,
                     Key: Key,
                     MachineCode: MachineCode,
+                    FriendlyName: FriendlyName,
                     FieldsToReturn: FieldsToReturn,
                     Metadata: Metadata,
                     FloatingTimeInterval: FloatingTimeInterval,
