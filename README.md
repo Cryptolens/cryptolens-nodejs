@@ -14,20 +14,20 @@ npm add cryptolens
 To verify a license key, you can use the code below. The RSAPublicKey, token and the product id can be found on [this page](https://help.cryptolens.io/examples/key-verification).
 
 ```js
-const key = require('cryptolens').Key;
-const Helpers = require('cryptolens').Helpers;
+import { Key, Helpers } from 'cryptolens';
 
-var RSAPubKey = "Your RSA Public key, which can be found here: https://app.cryptolens.io/User/Security";
-var result = key.Activate(token="Access token with with Activate permission", RSAPubKey, ProductId=3349, Key="GEBNC-WZZJD-VJIHG-GCMVD", MachineCode=Helpers.GetMachineCode());
+const RSAPubKey = "Your RSA Public key, which can be found here: https://app.cryptolens.io/User/Security";
+const token="Access token with with Activate permission", ProductId=3349, licenseKey="GEBNC-WZZJD-VJIHG-GCMVD";
+const MachineCode=Helpers.GetMachineCode();
 
-result.then(function(license) {
 
+const result = Key.Activate(token, RSAPubKey, ProductId, licenseKey, MachineCode);
+
+result.then((license) => {
     // success
-    
     // Please see https://app.cryptolens.io/docs/api/v3/model/LicenseKey for a complete list of parameters.
     console.log(license.Created);
-
-}).catch(function(error) {
+}).catch((error) => {
     // in case of an error, an Error object is returned.
     console.log(error.message);
 });
@@ -39,22 +39,22 @@ Assuming the license key verification was successful, we can save the result in 
 First, we need to add the reference to the helper methods:
 
 ```js
-const Helpers = require('cryptolens').Helpers;
+import { Helpers } from 'cryptolens';
 ```
 
 We can now proceed and save it as a string.
 
 ```js
-var licenseString = Helpers.SaveAsString(license);
+const licenseString = Helpers.SaveAsString(license);
 ```
 
 When loading it back, we can use the code below:
 ```js
-var license = Helpers.LoadFromString(RSAPubKey, licenseString);
+const license = Helpers.LoadFromString(RSAPubKey, licenseString);
 ```
 
 If you want to make sure that the license file is not too old, you can specify the maximum number of days as shown below (after 30 days, this method will return null).
 ```js
-var license = Helpers.LoadFromString(RSAPubKey, licenseString, 30);
+const license = Helpers.LoadFromString(RSAPubKey, licenseString, 30);
 ```
 

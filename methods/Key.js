@@ -1,7 +1,7 @@
-const got = require('got');
-const helpers = require('../internal/HelperMethods.js');
+import got from 'got';
+import helpers from '../internal/HelperMethods.js';
 
-module.exports = class Key {
+export default class Key {
 
     static Activate(token, rsaPubKey, ProductId, Key, MachineCode = "", FriendlyName = "", FieldsToReturn = 0, Metadata = false, FloatingTimeInterval = 0, MaxOverdraft = 0, LicenseServerUrl = "https://api.cryptolens.io") {
         return new Promise(async (resolve, reject) => {

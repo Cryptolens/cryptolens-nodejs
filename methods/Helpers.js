@@ -1,9 +1,8 @@
-const helpers = require('../internal/HelperMethods.js');
-const { execSync } = require("child_process");
-const crypto = require('crypto');
+import helpers from '../internal/HelperMethods.js';
+import { execSync } from 'child_process';
+import crypto from 'crypto';
 
-
-module.exports = class Helpers {
+export default class Helpers {
 
     /**
      * Save the license as a string that can later be read by LoadFromString.

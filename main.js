@@ -1,9 +1,9 @@
-const key = require('./methods/Key.js');
-const data = require('./methods/Data');
-const helpers = require('./methods/Helpers.js');
+import Key from './methods/Key.js';
+import Data from './methods/Data.js';
+import Helpers from './methods/Helpers.js';
 
-module.exports = {
-    Key : key,
-    Helpers : helpers,
-    Data: data
+export {
+    Key,
+    Helpers,
+    Data
 }
