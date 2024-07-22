@@ -1,7 +1,6 @@
-const got = require('got');
-const helpers = require('../internal/HelperMethods.js');
+import helpers from '../internal/HelperMethods.js';
 
-module.exports = class Key {
+export default class Key {
 
     static AddDataObjectToKey(token, ProductId, Key, CheckForDuplicates = false, Name = null, StringValue = null, IntValue= 0, LicenseServerUrl = "https://api.cryptolens.io") {
 

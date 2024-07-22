@@ -1,5 +1,7 @@
-const got = require("got");
-module.exports = class HelperMethods {
+import got from 'got';
+import NodeRSA from 'node-rsa'; 
+
+export default class HelperMethods {
 
     /**
      * Verify that a response obtained from Key.Activate has not been tampered with.
@@ -7,7 +9,6 @@ module.exports = class HelperMethods {
      * @param {string} rsaPubKey
      */
     static VerifySignature(response, rsaPubKey) {
-        const NodeRSA = require('node-rsa');
         const key = new NodeRSA();
         const pubKey = HelperMethods.GetPublicKeyParams(rsaPubKey);
         key.importKey({ n: pubKey.modulus, e: pubKey.exponent }, 'components-public');
