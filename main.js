@@ -1,9 +1,11 @@
 const key = require('./methods/Key.js');
 const data = require('./methods/Data');
 const helpers = require('./methods/Helpers.js');
+const product = require('./methods/Product.js');
 
 module.exports = {
     Key : key,
     Helpers : helpers,
-    Data: data
+    Data: data,
+    Product: product
 }
